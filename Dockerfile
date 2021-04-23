@@ -25,7 +25,7 @@ RUN chmod g+r /opt/tomcat/bin/*
 RUN rm -rf /opt/tomcat/webapps/*
 RUN cd /tmp && git clone https://github.com/Hareesh5041/CI-CD-using-Docker.git
 RUN cd /tmp/CI-CD-using-Docker && mvn clean install
-RUN cp /tmp/CI-CD-using-Docker/target/LoginWebApp.war /opt/tomcat/webapps/ROOT.war
+RUN cp /tmp/CI-CD-using-Docker/target/LoginWebApp-1.war /opt/tomcat/webapps/ROOT.war
 RUN chmod 777 /opt/tomcat/webapps/ROOT.war
 
 VOLUME /opt/tomcat/webapps
