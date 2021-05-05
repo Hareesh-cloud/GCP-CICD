@@ -4,6 +4,8 @@ FROM centos:7
 MAINTAINER Hareesh Thummala, hareesh5041@gmail.com
 
 RUN yum install -y java-1.8.0-openjdk-devel wget git maven
+RUN gcloud container clusters create gcpcluster \
+    --num-nodes 3 --zone us-central1-c
 
 # Create users and groups
 RUN groupadd tomcat
