@@ -1,6 +1,6 @@
 steps:
 # Pull the existing image
- - name: 'gcr.io/cloud-builders/docker'
+ - name: 'gcr.io/$PROJECT_ID/docker'
    entrypoint: 'bash'
    args:
     - '-c'
