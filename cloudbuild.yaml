@@ -13,10 +13,10 @@ steps:
  - name: 'gcr.io/cloud-builders/docker'
    args: ["push", "gcr.io/$PROJECT_ID/tomcat"]
 # deploy container image to GKE
-- name: "gcr.io/$PROJECT_ID/tomcat"
-  args:
-  - run
-  - --filename=tomcat
-  - --location=us-central1-c
-  - --cluster=gcpcluster
+ - name: "gcr.io/$PROJECT_ID/tomcat"
+   args:
+    - run
+    - --filename=tomcat
+    - --location=us-central1-c
+    - --cluster=gcpcluster
 
