@@ -1,6 +1,6 @@
 steps:
 # Pull the existing image
- - name: 'gcr.io/$PROJECT_ID/docker'
+ - name: 'gcr.io/$PROJECT_ID/tomcat'
    entrypoint: 'bash'
    args:
     - '-c'
