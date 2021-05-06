@@ -12,11 +12,14 @@ steps:
 # Push the docker image to container registry
  - name: 'gcr.io/cloud-builders/docker'
    args: ["push", "gcr.io/$PROJECT_ID/tomcat"]
-# deploy container image to GKE
- - name: "gcr.io/$PROJECT_ID/tomcat"
+# This step deploys your image in kubernetes cluster specfied in below env
+ - name: 'gcr.io/cloud-builders/kubectl'
+   id: Deploy
    args:
-    - run
-    - --filename=tomcat
-    - --location=us-central1-c
-    - --cluster=gcpcluster
+   - 'apply'
+   - '-f'
+   - 'deploy.yaml'
+   env:
+   - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+   - 'CLOUDSDK_CONTAINER_CLUSTER=gcpcluster'
 
