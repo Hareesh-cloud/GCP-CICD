@@ -12,3 +12,53 @@ spec:
   selector:
     app: tomcat
   type: ClusterIP
+
+
+trigger:
+- main
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: DeployHelmChart
+  jobs:
+  - job: HelmDeployment
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+        architecture: 'x64'
+    - script: |
+        helm upgrade --install my-release \
+          --namespace my-namespace \
+          --set someKey=someValue \
+          ./path/to/helm/chart
+      displayName: 'Deploy Helm Chart'
+    - script: |
+        kubectl rollout status deployment/my-release -n my-namespace
+      displayName: 'Wait for Helm Chart Deployment'
+
+- stage: DeploySQLDatabase
+  jobs:
+  - job: SQLDeployment
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+        architecture: 'x64'
+    - script: |
+        # You can use your preferred method to deploy the SQL database, for example, using SQL scripts.
+        # Example:
+        kubectl exec -n my-namespace -i sql-pod -- /opt/mssql-tools/bin/sqlcmd -U sa -P your_password -d your_database -i /path/to/sql_script.sql
+      displayName: 'Deploy SQL Database'
+    - script: |
+        # Optionally, you can perform additional verification or testing here.
+        # Example: Check database status, run tests, etc.
+      displayName: 'Verify SQL Database Deployment'
+
