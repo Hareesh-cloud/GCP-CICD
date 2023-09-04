@@ -62,3 +62,54 @@ stages:
         # Example: Check database status, run tests, etc.
       displayName: 'Verify SQL Database Deployment'
 
+
+
+trigger:
+- main
+
+pr:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Define your variables here
+  clusterName: 'your-openshift-cluster'
+  kubeconfig: $(AZURE_SERVICE_CONNECTION_STRING)
+
+stages:
+- stage: InstallHelm
+  jobs:
+  - job: InstallHelm
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+    - script: |
+        curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+        sudo apt-get install apt-transport-https --yes
+        echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt-get update
+        sudo apt-get install helm
+      displayName: 'Install Helm'
+
+- stage: DeploySQL
+  jobs:
+  - job: DeploySQL
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+    - script: |
+        helm repo add stable https://charts.helm.sh/stable
+        helm repo update
+        helm install sql-server stable/mssql-linux --set ACCEPT_EULA=Y --set SA_PASSWORD=YourStrongPassword
+        kubectl get pods --namespace default
+      displayName: 'Deploy SQL Server'
+
+    # Add additional steps for configuring SQL Server as needed.
+
+
